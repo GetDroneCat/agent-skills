@@ -1,0 +1,4 @@
+[submodule "agent-skills-claude"]
+	path = agent-skills-claude
+	url = https://github.com/addyosmani/agent-skills.git
+	branch = main
