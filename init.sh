@@ -161,6 +161,15 @@ $TOOL init summary
 - Overwrite: $( [[ "$FORCE" -eq 1 ]] && echo "force" || echo "safe-merge" )
 SUMMARY
 
+if [[ "$TOOL" == "codex" ]]; then
+  cat <<'TIP'
+Lifecycle command tips:
+- Preferred: /rb-spec /rb-plan /rb-build /rb-test /rb-review /rb-ship
+- Fallback:  $rb-spec $rb-plan $rb-build $rb-test $rb-review $rb-ship
+- Native built-ins remain: /plan /review
+TIP
+fi
+
 if [[ "$conflicted" -gt 0 ]]; then
   echo "Conflicting paths (first 50):"
   limit=0

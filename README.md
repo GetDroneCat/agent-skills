@@ -62,6 +62,25 @@ Notes:
 - Subagents are defined in TOML files under `agent-skills-codex/subagents/`.
 - Command-equivalent prompt files are in `agent-skills-codex/commands/` (`spec`, `plan`, `build`, `test`, `review`, `code-simplify`, `ship`).
 
+## Codex Command Compatibility
+
+For lifecycle workflows, use this command matrix:
+
+| Command type | Names |
+|---|---|
+| Preferred prefixed UX | `/rb-spec` `/rb-plan` `/rb-build` `/rb-test` `/rb-review` `/rb-ship` |
+| Guaranteed fallback | `$rb-spec` `$rb-plan` `$rb-build` `$rb-test` `$rb-review` `$rb-ship` |
+| Native Codex built-ins | `/plan` `/review` |
+
+Wrapper mapping:
+
+- `rb-spec` -> `spec-driven-development`
+- `rb-plan` -> `planning-and-task-breakdown`
+- `rb-build` -> `incremental-implementation` + `test-driven-development`
+- `rb-test` -> `test-driven-development`
+- `rb-review` -> `code-review-and-quality`
+- `rb-ship` -> `shipping-and-launch`
+
 ## Compatibility
 
 - `agent-skills-codex/` is the primary Codex source path.

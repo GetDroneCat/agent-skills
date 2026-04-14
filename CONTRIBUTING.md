@@ -33,6 +33,13 @@ Typical areas:
 - Preserve existing naming conventions and file layout.
 - Ensure copied or linked files in `agent-skills-codex` remain valid.
 - Keep `agent-skills-codex/commands/*` aligned with skill workflows.
+- Keep `rb-*` wrapper skills aligned with canonical lifecycle skills:
+  - `rb-spec` -> `spec-driven-development`
+  - `rb-plan` -> `planning-and-task-breakdown`
+  - `rb-build` -> `incremental-implementation` + `test-driven-development`
+  - `rb-test` -> `test-driven-development`
+  - `rb-review` -> `code-review-and-quality`
+  - `rb-ship` -> `shipping-and-launch`
 - Ensure `agent-skills-claude` remains installable at project root.
 - Do not break safe-merge install behavior in `init.sh`.
 

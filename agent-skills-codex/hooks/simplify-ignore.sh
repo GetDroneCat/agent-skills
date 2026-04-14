@@ -1,6 +1,7 @@
 #!/bin/bash
-# simplify-ignore.sh — Hook for Read (PreToolUse), Edit|Write (PostToolUse), Stop
+# simplify-ignore.sh — simplify-ignore helper with hook support
 #
+# Legacy Claude flow supported by this script:
 # PreToolUse Read   → backs up file, replaces blocks with BLOCK_<hash> in-place
 # PostToolUse Edit  → expands placeholders, re-filters so file stays hidden
 # PostToolUse Write → expands placeholders, re-filters so file stays hidden
@@ -17,17 +18,22 @@ if ! command -v jq >/dev/null 2>&1; then
   printf '%s\n' "error: missing jq" >&2; exit 1
 fi
 
-CACHE="${CLAUDE_PROJECT_DIR:-.}/.claude/.simplify-ignore-cache"
+# Codex project-local cache (default to current working directory).
+CACHE="${CODEX_PROJECT_DIR:-.}/.codex/.simplify-ignore-cache"
 if [ -t 0 ]; then INPUT="{}"; else INPUT=$(cat); fi
 
 # Parse hook input — trap errors explicitly so set -e doesn't cause
 # a silent exit on malformed JSON, and surface a useful diagnostic.
 parse_error=""
+HOOK_EVENT_NAME=$(printf '%s' "$INPUT" | jq -r '.hook_event_name // empty' 2>/dev/null) || {
+  parse_error="failed to parse .hook_event_name from hook input"
+  HOOK_EVENT_NAME=""
+}
 TOOL_NAME=$(printf '%s' "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null) || {
   parse_error="failed to parse .tool_name from hook input"
   TOOL_NAME=""
 }
-FILE_PATH=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null) || {
+FILE_PATH=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // empty' 2>/dev/null) || {
   parse_error="failed to parse .tool_input.file_path from hook input"
   FILE_PATH=""
 }
@@ -142,7 +148,7 @@ ${line}"
 }
 
 # ── Stop: restore all files from backup ───────────────────────────────────────
-if [ -z "$TOOL_NAME" ]; then
+if [ "$HOOK_EVENT_NAME" = "Stop" ] || { [ -z "$HOOK_EVENT_NAME" ] && [ -z "$TOOL_NAME" ]; }; then
   [ -d "$CACHE" ] || exit 0
   for bak in "$CACHE"/*.bak; do
     [ -f "$bak" ] || continue

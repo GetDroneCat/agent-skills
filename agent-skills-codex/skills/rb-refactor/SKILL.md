@@ -1,8 +1,13 @@
 ---
-description: Simplify code for clarity and maintainability — reduce complexity without changing behavior
+name: rb-refactor
+description: Wrapper lifecycle command for code refactoring. Use when user invokes /rb-refactor or $rb-refactor to simplify code for clarity and maintainability — reduce complexity without changing behavior
 ---
 
-Use skill: `code-simplification`.
+# RB Refactor
+
+Delegates to `/code-simplification` skill.
+
+## Workflow
 
 Simplify recently changed code (or specified scope) while preserving behavior:
 
